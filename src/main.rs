@@ -56,6 +56,13 @@ async fn main() {
     let search = warp::path!("neighbors" / String)
         .and(warp::query::<Query>())
         .map(move |parents: String, option: Query| {
+            if option.depth > 2 {
+                return http::Response::builder()
+                    .status(StatusCode::FOUND)
+                    .header("Location", "https://youtu.be/dQw4w9WgXcQ")
+                    .body("".into())
+                    .unwrap();
+            }
             let parents = decode(&parents).unwrap().into_owned();
 
             let mut stopword: Vec<String> =
