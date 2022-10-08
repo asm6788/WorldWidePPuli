@@ -10,6 +10,7 @@ use std::{
 };
 use urlencoding::decode;
 use warp::Filter;
+use warp_utils;
 
 #[tokio::main]
 async fn main() {
@@ -189,6 +190,7 @@ async fn main() {
         .or(frontend)
         .with(cors);
 
+    warp_utils::set_timeout(30000).unwrap();
     warp::serve(search).run(([0, 0, 0, 0], 80)).await;
 }
 

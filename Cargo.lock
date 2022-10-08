@@ -17,6 +17,7 @@ dependencies = [
  "tokio",
  "urlencoding",
  "warp",
+ "warp-utils",
 ]
 
 [[package]]
@@ -1124,6 +1125,11 @@ dependencies = [
  "tower-service",
  "tracing",
 ]
+
+[[package]]
+name = "warp-utils"
+version = "0.1.0"
+source = "git+https://github.com/jonathann-doe/warp-utils#371578303782286d300d97d53e3a1fcaa08d159a"
 
 [[package]]
 name = "wasi"
