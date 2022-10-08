@@ -182,7 +182,7 @@ async fn main() {
         .or(frontend)
         .with(cors);
 
-    warp::serve(search).run(([0, 0, 0, 0], 3030)).await;
+    warp::serve(search).run(([0, 0, 0, 0], 80)).await;
 }
 
 fn search_neighbors(
