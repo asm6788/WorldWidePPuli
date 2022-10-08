@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+
+<head>
+  <style>
+     body { margin: 0; }
+     .jb {
+				width: 15rem;
+				height: 40rem;
+				background-color: #E2E2E2;
+        margin: 20px;
+        padding: 10px;
+	      border-radius: 20px;
+      }
+  </style>
+
+  <script src="https://unpkg.com/force-graph"></script>
+</head>
+
+<body>
+  <div id="graph"></div>
+  <div class="jb" style="position:absolute; top:0; right:0;">
+      검색어<br>
+      <input type="search" id="target"><br>
+      깊이<br>
+      <input type="range" id="depth" min="0" max="2" step="1" /><br>
+      불용어(stopword)<br>
+      <p><textarea id="stopword" cols="20" rows="20"></textarea></p>
+      <button onclick="Run()">조이고 즐기자</button><br>
+      <p>좌클릭:해당 문서 열기<br>우클릭:해당 문서 제외</p>
+  </div>
+  <script>
+    function Run() {
+      fetch('http://asm6788.duckdns.org:3030/neighbors/'+
+      document.getElementById('target').value+
+      '?stopword='+document.getElementById('stopword').value+'&depth='+
+      document.getElementById('depth').value
+      )
+      .then(res => {
+        if (!res.ok) {
+          if(res.status === 404){
+            alert("검색어를 찾을 수 없습니다.");
+          }
+          else{
+            alert("오류가 발생했습니다.");
+          }
+          return;
+        }
+        return res.json();
+      })
+      .then(data => {
+        const Graph = ForceGraph()
+        (document.getElementById('graph'))
+          .graphData(data)
+          .nodeLabel('name')
+          .enableNodeDrag(false)
+          .linkDirectionalParticles(1)
+          .onNodeClick(node => {
+            window.open('https://namu.wiki/w/'+node.name);
+          })
+          .onNodeRightClick(node => {
+            document.getElementById('stopword').value += node.name + ',';
+          })
+          .nodeCanvasObject((node, ctx, globalScale) => {
+          const label = node.name;
+          const fontSize = 12/globalScale;
+          ctx.font = `${fontSize}px Sans-Serif`;
+          const textWidth = ctx.measureText(label).width;
+          const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2); // some padding
+
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+          ctx.fillRect(node.x - bckgDimensions[0] / 2, node.y - bckgDimensions[1] / 2, ...bckgDimensions);
+
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+          ctx.fillText(label, node.x, node.y);
+
+          node.__bckgDimensions = bckgDimensions; // to re-use in nodePointerAreaPaint
+        })
+          .nodePointerAreaPaint((node, color, ctx) => {
+            ctx.fillStyle = color;
+            const bckgDimensions = node.__bckgDimensions;
+            bckgDimensions && ctx.fillRect(node.x - bckgDimensions[0] / 2, node.y - bckgDimensions[1] / 2, ...bckgDimensions);
+          });
+
+        Graph.onEngineStop(() => Graph.zoomToFit(0));
+      })
+      .catch(err => {
+        alert(err);
+      });
+    }
+  </script>
+</body>
