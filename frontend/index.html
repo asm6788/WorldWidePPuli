@@ -25,12 +25,18 @@
       <input type="range" id="depth" min="0" max="2" step="1" /><br>
       불용어(stopword)<br>
       <p><textarea id="stopword" cols="20" rows="20"></textarea></p>
+
+      <input type="checkbox" id="visual_arrow" onchange="document.getElementById('visual_particle').checked = !document.getElementById('visual_arrow').checked"/>
+      <label for="coding">화살표</label>
+      <input type="checkbox" id="visual_particle" checked onchange="document.getElementById('visual_arrow').checked = !document.getElementById('visual_particle').checked"/>
+      <label for="coding">입자</label>
+
       <button onclick="Run()">조이고 즐기자</button><br>
       <p>좌클릭:해당 문서 열기<br>우클릭:해당 문서 제외</p>
   </div>
   <script>
     function Run() {
-      fetch('http://asm6788.duckdns.org:3030/neighbors/'+
+      fetch('/neighbors/'+
       document.getElementById('target').value+
       '?stopword='+document.getElementById('stopword').value+'&depth='+
       document.getElementById('depth').value
@@ -53,7 +59,6 @@
           .graphData(data)
           .nodeLabel('name')
           .enableNodeDrag(false)
-          .linkDirectionalParticles(1)
           .onNodeClick(node => {
             window.open('https://namu.wiki/w/'+node.name);
           })
@@ -82,6 +87,11 @@
             const bckgDimensions = node.__bckgDimensions;
             bckgDimensions && ctx.fillRect(node.x - bckgDimensions[0] / 2, node.y - bckgDimensions[1] / 2, ...bckgDimensions);
           });
+
+        if(document.getElementById('visual_particle').checked)
+          Graph.linkDirectionalParticles(1)
+        else
+          Graph.linkDirectionalArrowLength(8) 
 
         Graph.onEngineStop(() => Graph.zoomToFit(0));
       })

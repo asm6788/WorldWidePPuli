@@ -50,7 +50,7 @@ async fn main() {
     headers.insert("Content-Type", "text/html; charset=utf-8".parse().unwrap());
 
     let frontend = warp::path::end()
-        .and(warp::fs::file("frontend/index.html"))
+        .and(warp::fs::file("../../frontend/index.html"))
         .with(warp::reply::with::headers(headers.clone()));
 
     let search = warp::path!("neighbors" / String)
