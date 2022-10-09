@@ -27,8 +27,8 @@
       불용어(stopword)<br>
       <p><textarea id="stopword" cols="20" rows="20"></textarea></p>
       그래프 타입<br>
-      <input type="radio" name="visual_type" id="visual_arrow">화살표
-      <input type="radio" name="visual_type" id="visual_particle" checked="checked">입자
+      <input type="radio" name="visual_type" id="visual_arrow" onchange="Run()">화살표
+      <input type="radio" name="visual_type" id="visual_particle" checked="checked" onchange="Run()">입자
 
       <button onclick="Run()">조이고 즐기자</button><br>
       <p>좌클릭:해당 문서 열기<br>우클릭:해당 문서 제외</p>
