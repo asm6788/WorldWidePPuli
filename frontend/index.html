@@ -20,21 +20,23 @@
   <div id="graph"></div>
   <div class="jb" style="position:absolute; top:0; right:0;">
       검색어<br>
-      <input type="search" id="target"><br>
+      <input type="search" id="target" onKeypress="javascript:if(event.keyCode==13) {Run()}"><br>
       깊이<br>
-      <input type="range" id="depth" min="0" max="2" step="1" /><br>
+      <input type="range" id="depth" min="0" max="2" step="1" oninput="document.getElementById('depthValue').innerHTML=this.value;"/>
+      <span id="depthValue"></span><br>
       불용어(stopword)<br>
       <p><textarea id="stopword" cols="20" rows="20"></textarea></p>
-
-      <input type="checkbox" id="visual_arrow" onchange="document.getElementById('visual_particle').checked = !document.getElementById('visual_arrow').checked"/>
-      <label for="coding">화살표</label>
-      <input type="checkbox" id="visual_particle" checked onchange="document.getElementById('visual_arrow').checked = !document.getElementById('visual_particle').checked"/>
-      <label for="coding">입자</label>
+      그래프 타입<br>
+      <input type="radio" name="visual_type" id="visual_arrow">화살표
+      <input type="radio" name="visual_type" id="visual_particle" checked="checked">입자
 
       <button onclick="Run()">조이고 즐기자</button><br>
       <p>좌클릭:해당 문서 열기<br>우클릭:해당 문서 제외</p>
   </div>
   <script>
+    depthSlider = document.getElementById("depth");
+    var depthOutput = document.getElementById("depthValue");
+    depthOutput.innerHTML = depthSlider.value;
     function Run() {
       fetch('/neighbors/'+
       document.getElementById('target').value+
